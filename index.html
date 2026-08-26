@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Cotisations — Association Nasroune minaal laahi</title>
+<title>Confirmation d'accord Check-off</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -11,13 +11,13 @@
   :root{
     --paper:#F6F4EF;
     --card:#FFFFFF;
-    --ink:#1E3A2E;
-    --ink-soft:#4F6B5A;
-    --hairline:#DCD5C4;
+    --ink:#16233F;
+    --ink-soft:#4A5670;
+    --hairline:#DAD5C8;
     --gold:#A9812F;
     --gold-soft:#F0E6CC;
-    --green:#2F7A4F;
-    --green-soft:#E6F1EA;
+    --green:#3F6C51;
+    --green-soft:#E7F0E9;
     --red:#A23E34;
     --red-soft:#F5E7E4;
     --radius:14px;
@@ -33,23 +33,24 @@
   }
   .wrap{max-width:760px;margin:0 auto;padding:32px 20px 80px;}
 
+  /* Header / masthead */
   .masthead{
-    display:flex;align-items:center;justify-content:center;
+    display:flex;align-items:center;justify-content:space-between;
     padding-bottom:20px;margin-bottom:24px;
     border-bottom:2px solid var(--ink);
-    text-align:center;
   }
   .masthead h1{
     font-family:'Fraunces',serif;
-    font-size:20px;font-weight:600;letter-spacing:-0.01em;
-    margin:2px 0 0;line-height:1.35;
+    font-size:22px;font-weight:600;letter-spacing:-0.01em;
+    margin:0;
   }
   .masthead .eyebrow{
     font-family:'IBM Plex Mono',monospace;
-    font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    font-size:11px;letter-spacing:.12em;text-transform:uppercase;
     color:var(--gold);margin:0 0 4px;
   }
 
+  /* Tabs */
   .tabs{display:flex;gap:6px;margin-bottom:28px;}
   .tab{
     font-family:'IBM Plex Mono',monospace;
@@ -67,12 +68,13 @@
   .panel{display:none;}
   .panel.active{display:block;}
 
+  /* Card */
   .card{
     background:var(--card);
     border:1px solid var(--hairline);
     border-radius:var(--radius);
     padding:32px;
-    box-shadow:0 1px 2px rgba(30,58,46,0.05);
+    box-shadow:0 1px 2px rgba(22,35,63,0.04);
   }
   .card + .card{margin-top:16px;}
   .doc-title{
@@ -83,32 +85,53 @@
     font-size:13.5px;color:var(--ink-soft);margin:0 0 28px;line-height:1.5;
   }
 
+  /* Form */
   label{
     display:block;font-size:12px;font-weight:600;letter-spacing:.02em;
     color:var(--ink-soft);margin-bottom:6px;margin-top:20px;
   }
   label:first-of-type{margin-top:0;}
-  input[type=text],input[type=tel],input[type=number]{
+  input[type=text],input[type=tel],#section{
     width:100%;padding:11px 13px;border:1px solid var(--hairline);
     border-radius:8px;font-family:'Inter',sans-serif;font-size:14.5px;
     background:#FCFBF8;color:var(--ink);
   }
-  input:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold);}
+  input:focus,#section:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold);}
   .hint{font-size:11.5px;color:#8A8371;margin-top:5px;}
 
-  .amount-row{display:flex;align-items:center;gap:10px;}
-  .amount-row input{flex:1;}
-  .amount-suffix{
-    font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink-soft);
-    white-space:nowrap;
+  .accord-group{display:flex;gap:10px;margin-top:8px;}
+  .accord-opt{
+    flex:1;border:1.5px solid var(--hairline);border-radius:10px;
+    padding:14px 12px;cursor:pointer;text-align:center;
+    transition:border-color .15s, background .15s;
   }
-  .amount-quick{display:flex;gap:8px;margin-top:8px;}
-  .qbtn{
-    font-family:'IBM Plex Mono',monospace;font-size:12px;
-    border:1px solid var(--hairline);background:var(--card);color:var(--ink-soft);
-    border-radius:20px;padding:6px 14px;cursor:pointer;
+  .accord-opt input{position:absolute;opacity:0;pointer-events:none;}
+  .accord-opt .label{font-weight:600;font-size:14px;}
+  .accord-opt .sub{font-size:11px;color:var(--ink-soft);margin-top:2px;}
+  .accord-opt.oui.checked{border-color:var(--green);background:var(--green-soft);}
+  .accord-opt.non.checked{border-color:var(--red);background:var(--red-soft);}
+
+  /* Signature pad */
+  .sig-wrap{margin-top:8px;}
+  .sig-box{
+    position:relative;border:1.5px dashed var(--hairline);border-radius:10px;
+    background:#FCFBF8;overflow:hidden;
   }
-  .qbtn.active{border-color:var(--green);background:var(--green-soft);color:var(--green);font-weight:600;}
+  canvas{display:block;width:100%;height:160px;touch-action:none;cursor:crosshair;}
+  .sig-baseline{
+    position:absolute;left:16px;right:16px;bottom:34px;
+    border-bottom:1px dotted #B7B0A0;pointer-events:none;
+  }
+  .sig-caption{
+    text-align:center;font-family:'Fraunces',serif;font-style:italic;
+    font-size:12px;color:#8A8371;padding:6px 0 10px;
+  }
+  .sig-controls{display:flex;justify-content:flex-end;padding:0 0 10px;}
+  .btn-ghost{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.04em;
+    background:none;border:none;color:var(--ink-soft);cursor:pointer;
+    text-decoration:underline;padding:4px;
+  }
 
   .submit-row{margin-top:28px;}
   .btn-primary{
@@ -117,13 +140,16 @@
     font-weight:600;font-size:14.5px;cursor:pointer;
     transition:background .15s;
   }
-  .btn-primary:hover{background:#12261D;}
-  .btn-primary:disabled{background:#B9C4BD;cursor:not-allowed;}
+  .btn-primary:hover{background:#0E1830;}
+  .btn-primary:disabled{background:#B9BFCD;cursor:not-allowed;}
   .error-msg{
     color:var(--red);font-size:12.5px;margin-top:10px;display:none;
   }
 
-  .confirm{text-align:center;padding:20px 0 4px;}
+  /* Confirmation */
+  .confirm{
+    text-align:center;padding:20px 0 4px;
+  }
   .confirm .stamp{
     width:64px;height:64px;border-radius:50%;
     border:2.5px solid var(--green);color:var(--green);
@@ -142,15 +168,16 @@
   .receipt .k{color:var(--ink-soft);}
   .receipt .v{font-weight:600;font-family:'IBM Plex Mono',monospace;font-size:12.5px;}
 
+  /* Dashboard */
   .gate{max-width:340px;margin:60px auto 0;text-align:center;}
   .gate .card{padding:28px;}
   .gate p{font-size:13px;color:var(--ink-soft);margin-top:6px;}
-  .stat-row{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
+  .stat-row{display:flex;gap:12px;margin-bottom:16px;}
   .stat{
-    flex:1;min-width:140px;background:var(--card);border:1px solid var(--hairline);
+    flex:1;background:var(--card);border:1px solid var(--hairline);
     border-radius:12px;padding:16px 18px;
   }
-  .stat .n{font-family:'Fraunces',serif;font-size:24px;font-weight:600;}
+  .stat .n{font-family:'Fraunces',serif;font-size:26px;font-weight:600;}
   .stat .l{font-size:11px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.06em;margin-top:2px;}
   .toolbar{display:flex;gap:10px;margin-bottom:14px;}
   .search{
@@ -168,27 +195,91 @@
     text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);
     padding:8px 10px;border-bottom:1.5px solid var(--ink);
   }
+  thead th.sortable{cursor:pointer;user-select:none;}
+  thead th.sortable:hover{color:var(--ink);}
+  thead th.sortable .arrow{margin-left:3px;}
   tbody td{padding:10px;border-bottom:1px solid #EFEBE1;vertical-align:middle;}
   tbody tr:hover{background:#FCFBF8;}
+  .pill{
+    display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;
+  }
+  .pill.oui{background:var(--green-soft);color:var(--green);}
+  .pill.non{background:var(--red-soft);color:var(--red);}
   .mono{font-family:'IBM Plex Mono',monospace;font-size:12px;}
   .empty{text-align:center;padding:50px 10px;color:var(--ink-soft);font-size:13.5px;}
+  .sig-thumb{
+    width:56px;height:26px;background:#fff;border:1px solid var(--hairline);
+    border-radius:4px;cursor:pointer;object-fit:contain;
+  }
+  .btn-row-print{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.03em;
+    background:none;border:1px solid var(--hairline);color:var(--ink-soft);
+    border-radius:6px;padding:4px 8px;cursor:pointer;white-space:nowrap;
+  }
+  .btn-row-print:hover{border-color:var(--ink);color:var(--ink);}
+
+  /* Fiches imprimables */
+  #print-area{display:none;}
+  .fiche{
+    font-family:'Inter',sans-serif;color:#16233F;padding:30px;
+  }
+  .fiche .fiche-head{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    border-bottom:2px solid #16233F;padding-bottom:14px;margin-bottom:22px;
+  }
+  .fiche .fiche-eyebrow{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;
+    letter-spacing:.1em;color:#A9812F;font-weight:700;
+  }
+  .fiche .fiche-title{
+    font-family:'Fraunces',serif;font-size:18px;font-weight:600;margin:2px 0 0;
+  }
+  .fiche table{width:100%;border-collapse:collapse;font-size:14px;}
+  .fiche table td{padding:9px 0;border-bottom:1px solid #EFEBE1;vertical-align:top;}
+  .fiche table td.k{color:#4A5670;width:180px;}
+  .fiche table td.v{font-weight:600;}
+  .fiche .fiche-sig-label{font-size:11px;color:#8A8371;margin:22px 0 6px;}
+  .fiche .fiche-sig-img{
+    max-width:280px;border:1px solid #DAD5C8;border-radius:8px;
+    padding:10px;background:#fff;display:block;
+  }
+  .fiche .fiche-foot{
+    margin-top:30px;font-size:10.5px;color:#8A8371;
+    border-top:1px dotted #B7B0A0;padding-top:10px;
+  }
+  @media print{
+    body *{visibility:hidden;}
+    #print-area, #print-area *{visibility:visible;}
+    #print-area{display:block;position:absolute;left:0;top:0;width:100%;margin:0;padding:0;}
+    .fiche{page-break-after:always;}
+    .fiche:last-child{page-break-after:auto;}
+  }
+  .lightbox{
+    position:fixed;inset:0;background:rgba(22,35,63,.55);
+    display:none;align-items:center;justify-content:center;z-index:50;padding:20px;
+  }
+  .lightbox.show{display:flex;}
+  .lightbox img{max-width:400px;width:100%;background:#fff;border-radius:10px;padding:16px;}
   .refresh-note{font-size:11.5px;color:#8A8371;margin-bottom:12px;}
   @media (max-width:520px){
     .wrap{padding:20px 14px 60px;}
     .card{padding:22px 18px;}
-    .masthead h1{font-size:17px;}
-    thead th:nth-child(3),tbody td:nth-child(3){display:none;}
+    thead th:nth-child(4),tbody td:nth-child(4){display:none;}
+    .masthead img{height:44px !important;}
+    .masthead .eyebrow{font-size:11px !important;}
   }
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <div class="masthead">
-    <div>
-      <p class="eyebrow">Association Nasroune minaal laahi</p>
-      <h1>Cotisations pour l'édification de la mosquée<br>Cité ICS Sant Yalla</h1>
+  <div class="masthead" style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
+    <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAGEArgMBIgACEQEDEQH/xAAbAAACAgMBAAAAAAAAAAAAAAAABgQFAgMHAf/EAD4QAAEEAQIDBQQHBgUFAAAAAAECAwQFAAYREiExExRBUWEHInGBFSMyQlJioRYzcpGxwSRjgpPRRFNUdLL/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A7jhhhgGGYOKShBUtQSkcySdgMoHNSxnS43UNLsnUdRGICE/FR5YDFmKyAklR2HnnP7zUlhXNNvahsYtOw9uGmo6FPOu+m/QHCja01dhwyXpb7oIStM6SVA79Nj0+WA1S9SU0RRTIsYqXB9wLClHIZ1Oh5tKoVbYSUqP2gwUJHzOJt9V6hqtQMMwkyXqF4qHDVNJQ7HP5j45i3pjU+oNKTq7U8otLS72lfKcc+tA/Pt6YDii9spj6m6+sZUlse92klG4+QPLItnqSdUrjt2rtXEckKCWUuOK94/LKLTNanT02NIe1BWAhAafCHOLtQP75M1iKHVzUZlc6YhUN4SG3Y0dS9ldB0GBbWtncVDCH571eGluJbBQ24vZSiNtxkOZqmVBtF1suyqW5qUBxTRbdPuHoRm2ns0RO1S7IurEJSBu7CVw79eXLF6209Qy7h+2WbyPNlHYvKjKUEcvLbAYlajnogGwVJp0RN9u3feU0hSvTfN7eorEIYfer4zjL43aWxMSQv+EeOLN1W0VtXU9ZZWUxMevX2hDkVSUyfiduQyHB0jVMXrEuNqNh2tgqW7AhOL3TGdVzH+kHY/LAe/2nSgKMyrnx+Hnv2PGP0zfE1NSyyEt2Mfj/AALVwkfEHOdnQ2pX5PfBZshch0OTXG3lKDmx33b/AAnbwzG4t9RS7rsX6huJVJ2ZYanMBwyVfi4ttgT8cDrrakq2UFBQPQggjNmcmmzoFdJj13Yvu6gcWELiUzqkdgn823IZequp8GUmPHvKmYpOyTDkvpQ8FeXEPH44D5hi8jUrMcpRcxnK1azyLpBbPwWOWXjLiHkJcaUlSFcwUncHA24YYYHiunTfFm01W0zOVV1DDlnZJUEuMsdGAfvOK8BlVcWs7U9qqh01IWzEZO1lZtc+y/y0H8Xn5DfK/Uj9lp+KK7TdLPaZQeM2EVAf7Qgc+Ib78/HAztnoJslQ9TTZNvMI7UVUFolLSR4lKeavnipa2WoL2FYVsUtSqokIXHixy0/D/CFI67dMudN1Vpq6Si1tmYrauEo+kYTimH+X3VJ2/vl9WxYlZKmR9Hs97sn1bS7B9fGhsjwUrxI8vPAodO6Psa+pSzqefHTXbkPRZP1qHUbcini5oV0ydSVNMw6hui09On8C/q5U7iCGRv0BXsdvgMaaXTQjOGTbzHLSeo7l94bJR6IQOSRjCkAcIAAA6DAo5FdcTmyh+17onf7MRHPby4jzGexNMQGFuLeD8tbm3EuU6XD8vLL7DAgx6qBFB7tDZb368KcloQlI2SAPgNszzxXTAMOmct9rWq7Jhhyo0yXFTY6RJmusc+7tpO43PhuQMYfZtrSNq2oQrfhnsJCZDZ5Hfb7Q+OA3qSFDntt65El1cCWNpMNlxPjxJGTsMChl6ZrZHAplL0RafsqjLUg5gzV20JJEa2VKTvuEzE7kf6sYcMBFmPx4L8wTtPvw3JqC2/YwkBSVb8tyRz/niv8AsC6qnRGq7dqXVsFSnW2o47d8E78BOdhV9k7jfF66023LCpFdIXWzxzTJjjbi9Fp8Rgc5d1jZ0NzUaeXTorK8pC1Mukynuz3PLlvsT5Y0wIgTWGypXZOnXH3jwR7AfVuc+W7ZPu7+mTO+OsFMbU7bUOa6gtNWcfkhW/IBKvuq9PliJb6TNFJMzUbkizSHt2pjhKw834ocSTskgb7K8wMDo8LUxjyG4OomRXy1nZtwr3YkH8i/P0OMWwUSASAPI7Zx7S+q6mw3o7GKtyk3UtqTZyQVNgdAPQHYDGWPOtNIOutSkv21K7sYUhCgXGt+fZq9NuhwIOq7Gn0rVRtG10t6tdktn/FNp4uz3PNSyOe6j4+uU1RSOWbsaJR2NXHmRljt5sCxccdUkeJQobbn45Z6rbdjXM23LFlGdI7JMgFggoH4Qo/2yd7OJsxdTZ2dqmEtEbiCH2mkpeWlI4lBzh5b4FhdS5VvaHS1NIWz2bQXZTE/aaQeiR+dX98Z6Srh0sBmBXshploch4n1J8SfHFj2TsLVp02sj3pFrIclKWTuVJJ2SPkMd8AzxX2T4Z7niumAu3mqYVVYR63s3pVlJ5txYyQVhP4lb8gMwdvLRDhKaFxaSd+APo4wPE7b9cUtrLT+t7l+1BS1co7KFapTxpjkD3UK8tuuVc6kMSijuSWbFdqy5xi3rFd441g77qTvyG2B0qh1NW3jz8WI64mXH/fRnUFDrfqRlJ7R9aJ05FbgwUdtcTvcitJ6gnkCcX1zqqusF63mXkWUuHGMUtRWezW84obgLG/XKOsnOVkSb7RdVpSudM+rq45+6PDb4f8AOBfV1GzRezfUCXpSH7Z1hxdgviBUlzb7J/nnNdHaR1xF7nfaejKSFp4kLDqRxp8iCfHGvQT6pfsz1fLd5uyHHXHPiRjBXQNQ2fso0+1peb3WXwJKl8XD7nPlvgMcPUOpO7NCXpSSJG31vBJbI4vMc8Imvq9Wn51vZtOwUw5Co7jThSVFY2Gw2PPrnMr5HtD0pFbs7y7W9CS6ELbYk7KVv5csuLnT8e00LCnaPUueyzO+kpCH3uJa1ge8n49cB+RqCe+029HonksOIC0l11CFL3HIdc0o1iItlAg3dbKrn5y1JZU4pCkHYb7bg4svvwNU8V2ptuxjPREoRE7yEPQ1jfiCU+J3zRFoIdvSVlXZXk5hpuV2kZiyYDcjcfdBJ5jA6ynmoHZPxGZHpmtlIQhCQoqAAAPntm3Ah2kCPYwnYsxoPMOpKVoPjiRDR9B2DekLxS5dVPQfo+S/zUCOfYqPmNuWdCPTw+eJ3tShKf0fIlMFKJFeUy2lk7bdmQo7fIHA57f6Mkw7uwQnuQbbbS5CemkfWDf3077jbYf0xz0jadxEitvr6BMQghyI626FLCNhulQ8Nj0w1e1C1Bo2FOl2Ca4OobV3h1jtVI4wDwjy3znYNFoiCF12o1vvSHNnFpgArI28eI9MDolx7PNN2Ni+FzZSJkklzgEnc8xsdknwy4o9Ot1On3tPKse8NrbW22ShKXEIUCPDr8cpNSUdXq6NB1RXzXWkNNKLjkRJK3Wj1RsOe454lx79mstok3T2mZ0dhCw07Ompdcc7LxPCTsBgdC9kspTmlG4ThHaVzzkVSfvAJPIkeox2zn0pYqrM6uoe0lV01A+k2Wk+AB2eA9PH03x1rJ8W0hszoLyX47yeJtxB5EYEzMXOaDmWeK6YHNHtUaksImpUVceNImV07sWYfZ7lbfLckb/HKrUttGXpqFZ0Zlwr4rb+oitKTurf30rT+HrjlqDQ0S0sUWkCZIqbNPWTE2HaeigeuSHKnUDUQpi3jSnwnZK3YiTufM7YCR7QtOQL3WFBDb4EzlpL0yMlPAktggqWojx65E1bX6W19OQzD1KmNJh7xmo6x9Xy5bjl6Z69pP2hJE+Kp2A8uzKUybLj2cSgfdHlmux9idfCrZMz6WkqfYjrc5p+0pKd8CwpNKztJ+zfVEOeplYWha21tniCk8PXNC4+oZPse083pfvHeylPF2Ctjwc8vYbi3PYiFL5q+ilcR+Wcgo/atqSlqY1bCMUR4yOFBW1udvjgSrLTPtMs4wj2MaxkMk78C1gjcfPJ2gm7bS9y7S3VtI0/3hKVtNkBQdWTsB6ZnX+1TX9k6huFDaf4zsOCISCfjl8/7ONUa0s2LPVsyPCUhsJSIyPeGx5DbwOBLqYzZh20PWFUtFg24tcR9EYp7UEe6oFHjvt1ypS3qJ32bWD+rmFKLLjSoDsobvp98cW5PMDbOhx9JW8JpLMLV1j2YT/1KEuny5HwzJnRIkz2Z19bzLJxg+604Qlr48I64DXFJ7FonxSP55vzBICdgBsB0HlmeB4oAp57beuKHtSnd20VObbQFuzUiKgH/MITv+u+NMyQzEiuSJLiG2W08S1rOyUjzOIKZH7SWCNUy25AoKtKlw2A3uuSvoXeHy8v54E25u2dGadpYL8XvXEhEfid91tspABUvlyAxeudc6UlcKLSldfgJV9Q8lgEOK8ShHXg/NlZaS4+qriW/wDScSygutgMwpMkxFRjvzSQUkFWPej6AxoZesmllxfutMylIe7FsdEpISOWBAmwpeiLB63po7kikfUVT4LR3LCj1dbHx6j45LsWre1lQrzSlwyqMWeFyDIB7JYPPflzCvjjor7JxUsNLLjz3LPTUr6PmOLCn2+HiZkeik/dPqMBIp5qtOXlk/HU7YyHEFLtdAZUmOwvfcqUtZ+WMNW6ltrvWlZEXvChxv1BfCkKWeZ4FeBzLUbtZe17tNqZD9Q4Vjgc4vq1q8wrooehyjnaMXXsQrKQw7ezWXEoiM1qExWkD8SinmR54D5Qakj2u7Lsd6DPR+9iSBstJ9PMeuX3Ug5xmr1xOtbOxrb+obsZbLoRGhV7Z3bV949oegA8ccuxVp96KEahVHMnZKIVg6HQVHnsD19N8B2wyhXbzYiFGfVPkJG/HF+sB8OmewNUVM1fA3L4F7c0OpKCP54F7muS2h5hxp1IU24koUk+IPIjNbcph3bsnml/wrBObhzG+AlPez9hEF+urbewg17wIXGQeNOx6gb9Bkek9lGk6ttJdhGa6CFdrIPEf5Y/Z7gRocWPDQGYrDbLY6JbQEj9Mk54emaHZDDfNx1tAHXiXsMCRhlJO1LUQTwOS0rWro22OMq9BtmoXkuUylyDWOobKeLjlnskgYF+rplDfajh1CQ2EOSpiv3USMOJbivAeQ+JxZupbkjjW9fvyWkclV1G2grX6qJ97b1GLjusu6LXDhpFClSgGbDs+8havwO78x8cBnnurlRET9dLYgscQ7GsDm6QrwLqh18PQZU2l5rWN2VnEXXohlR/wqU9q0w0kcipxPPc8th65qb0vL1GJEW4rna6Rwhz6SiyCuNKB8OBXIb5Y6ZiU2mEzIumkP3Ni459cGtw2kjbr90AYFdpjSsGc0/qDVVeqC2uR3kMSHgW1qPPtDy4h4bAnLxSrPWLi+6rkVVNHOzDxa9+SrpxAeCNumWTGm37d5EvVbzckoUFNQW/3LJHT+I/HGrYBPIgeHI7DA2YHDDAjyorMthbMhpDrSxspDg3B+WUZ053MKNFMehLP3FHtGvhwnpjJhgJE5myQl5mZWKbQ7sXZ9S5wOr280jnizEp9OMapjXLVks92ZUnulolaldoeitz0551w9P+cjyYzL6eB1ltaVdQpAI/XA5NKr9azLZUltbjyJx23YnfVxBvyWgjkfhnTYFcpFazFsnRYOITwreeaALh8yMjPaTpnV8bcUx17bbx3FN//JGaxQy2G+zg3s5tIPILKXf1PPA3L0vT9W4SGjvz7Ilv+ma3dLQFIIRIntfwSl8v1z3uWo2duztYzwHg8xtv8dsCNToHEF1jm33Alaf13wMP2ZSCNrO02H+fmX7NI8bO02/9jPO31R/41f8A7hw7fVHjFgf7hwPWtLwUpHaSJrhP3lSl8/1zP9lqgIUFwku7/wDfUVj57nNYTqZznx1jX5SlSts97pqNw7OWcVpJ6hqPzHw3wEzUdjqumlO1EaAyWJaf8LOgxthHPkRmaYV1q7Rj1ZqwuVUxhYKJSiEpe4ehUPLG76DmPIU3Jvp7g8ez4GyfmnM2NKU7a0rcjqkr22KpLhc/qcBDdqqdtFdIsLFmLfRDsp6hb27wjlslQ8d/HGBitLs/vVVppptSukmarYJO3UNeB+GOcaLHigIjsNtj8iQBm/AXP2ffnJBvZzspQP7po9k0PkOZ+eXcOLGhtBiIyhltPRLaQkZJwwDDDDAMMMMAwwwwDDDDAMMMMAwwwwDDDDAMMMMAwwwwDDDDAMMMMAwwwwP/2Q==" alt="Logo du SAES (Syndicat Autonome de l'Enseignement Supérieur)" style="height:72px;width:auto;flex-shrink:0;" />
+    <div style="text-align:center;">
+      <p class="eyebrow" style="font-weight:700;font-size:13px;">Syndicat Autonome de l'Enseignement Supérieur — Section UAM Diamniadio</p>
+      <h1>Plateforme numérique Check-off syndical</h1>
     </div>
+    <img src="data:image/png;base64,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" alt="Logo de l'UAM (Université Amadou Mahtar Mbow de Dakar)" style="height:72px;width:auto;flex-shrink:0;" />
   </div>
 
   <div class="tabs">
@@ -199,32 +290,60 @@
   <!-- FORM PANEL -->
   <div class="panel active" id="panel-form">
     <div id="form-card" class="card">
-      <p class="doc-title">Versement de la cotisation</p>
-      <p class="doc-sub">Merci de renseigner les informations du ménage et le montant versé pour la cotisation en faveur de la construction de la mosquée.</p>
+      <p class="doc-title">Formulaire de confirmation</p>
+      <p class="doc-sub">Merci de renseigner vos informations et de confirmer votre accord concernant le prélèvement des cotisations syndicales sur salaire (check-off).</p>
 
-      <label for="chef">Nom du chef de ménage</label>
-      <input type="text" id="chef" placeholder="Prénom et nom" autocomplete="name" />
+      <label for="nom">Nom complet</label>
+      <input type="text" id="nom" placeholder="Prénom et nom" autocomplete="name" />
 
-      <label for="quartier">Quartier / Adresse</label>
-      <input type="text" id="quartier" placeholder="Ex : Cité ICS, Rue 12..." />
+      <label for="matricule">Matricule</label>
+      <input type="text" id="matricule" placeholder="Numéro d'employé" />
+      <div class="hint">Une seule confirmation est conservée par matricule ; une nouvelle soumission remplace la précédente.</div>
+      <p class="hint" id="dup-warning" style="display:none;color:#6B5322;background:var(--gold-soft);border:1px solid var(--gold);border-radius:8px;padding:8px 10px;margin-top:8px;"></p>
+
+      <label for="section">UFR / École</label>
+      <select id="section">
+        <option value="">— Choisir —</option>
+        <option value="Polytech Diamniadio">Polytech Diamniadio</option>
+        <option value="UFR SEG">UFR SEG</option>
+        <option value="UFR TECNA">UFR TECNA</option>
+        <option value="UFR STA">UFR STA</option>
+        <option value="Centre des Langues">Centre des Langues</option>
+      </select>
 
       <label for="tel">Téléphone</label>
       <input type="tel" id="tel" placeholder="Ex : 77 123 45 67" />
 
-      <label for="montant">Montant versé</label>
-      <div class="amount-row">
-        <input type="number" id="montant" min="0" step="500" value="5000" />
-        <span class="amount-suffix">F CFA</span>
+      <label>Accord check-off</label>
+      <div class="accord-group">
+        <label class="accord-opt oui" id="opt-oui">
+          <input type="radio" name="accord" value="Oui" />
+          <div class="label">Oui, j'accepte</div>
+          <div class="sub">Prélèvement autorisé</div>
+        </label>
+        <label class="accord-opt non" id="opt-non">
+          <input type="radio" name="accord" value="Non" />
+          <div class="label">Non, je refuse</div>
+          <div class="sub">Prélèvement refusé</div>
+        </label>
       </div>
-      <div class="amount-quick">
-        <button type="button" class="qbtn active" data-amt="5000">5 000</button>
-        <button type="button" class="qbtn" data-amt="10000">10 000</button>
-        <button type="button" class="qbtn" data-amt="15000">15 000</button>
-      </div>
-      <div class="hint">Cotisation de base : 5 000 F CFA par ménage. Montant modifiable en cas de versement différent.</div>
 
-      <label for="note">Remarque (facultatif)</label>
-      <input type="text" id="note" placeholder="Ex : mois de versement, précision..." />
+      <label>Signature électronique</label>
+      <div class="sig-wrap">
+        <div class="sig-box">
+          <canvas id="sigpad"></canvas>
+          <div class="sig-baseline"></div>
+        </div>
+        <p class="sig-caption">Signez ci-dessus avec le doigt ou la souris</p>
+        <div class="sig-controls">
+          <button type="button" class="btn-ghost" id="clear-sig">Effacer la signature</button>
+        </div>
+      </div>
+
+      <label style="display:flex;align-items:center;gap:8px;margin-top:20px;cursor:pointer;">
+        <input type="checkbox" id="geo-consent" style="width:auto;margin:0;" />
+        <span style="font-weight:400;font-size:12.5px;color:var(--ink-soft);">Partager ma position au moment de la signature (optionnel)</span>
+      </label>
 
       <div class="submit-row">
         <button class="btn-primary" id="submit-btn">Confirmer et envoyer</button>
@@ -232,12 +351,14 @@
       </div>
     </div>
 
+    <!-- CONFIRMATION (hidden until submit) -->
     <div class="card confirm" id="confirm-card" style="display:none;">
       <div class="stamp">✓</div>
-      <h2>Versement enregistré</h2>
-      <p>Merci. Votre cotisation a bien été transmise aux responsables de l'association.</p>
+      <h2>Confirmation enregistrée</h2>
+      <p style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin:-4px 0 10px;">Syndicat Autonome de l'Enseignement Supérieur — Section UAM Diamniadio</p>
+      <p>Votre réponse a bien été transmise aux responsables du syndicat.</p>
       <div class="receipt" id="receipt"></div>
-      <button class="btn-primary" id="new-entry-btn" style="background:var(--gold-soft);color:#6B5322;">Nouveau versement</button>
+      <button class="btn-primary" id="new-entry-btn" style="background:var(--gold-soft);color:#6B5322;">Nouvelle confirmation</button>
     </div>
   </div>
 
@@ -247,7 +368,7 @@
     <div class="gate" id="dash-gate">
       <div class="card">
         <p class="doc-title" style="margin-bottom:2px;">Espace responsable</p>
-        <p>Entrez le code d'accès pour consulter les cotisations.</p>
+        <p>Entrez le code d'accès pour consulter les confirmations.</p>
         <input type="text" class="search" id="pin-input" placeholder="Code d'accès" style="margin-top:16px;text-align:center;letter-spacing:.1em;" />
         <button class="btn-primary" id="pin-submit" style="margin-top:12px;">Accéder</button>
         <p class="error-msg" id="pin-error"></p>
@@ -256,38 +377,68 @@
 
     <div id="dash-content" style="display:none;">
       <div class="stat-row">
-        <div class="stat"><div class="n" id="stat-total">0</div><div class="l">Versements</div></div>
-        <div class="stat"><div class="n" id="stat-menages">0</div><div class="l">Ménages distincts</div></div>
-        <div class="stat"><div class="n" id="stat-montant" style="color:var(--green);">0</div><div class="l">Total collecté (F CFA)</div></div>
+        <div class="stat"><div class="n" id="stat-total">0</div><div class="l">Confirmations</div></div>
+        <div class="stat"><div class="n" id="stat-oui" style="color:var(--green);">0</div><div class="l">Accords « Oui »</div></div>
+        <div class="stat"><div class="n" id="stat-non" style="color:var(--red);">0</div><div class="l">Refus « Non »</div></div>
       </div>
       <div class="toolbar">
-        <input type="text" class="search" id="search-input" placeholder="Rechercher par nom, quartier ou téléphone…" />
+        <input type="text" class="search" id="search-input" placeholder="Rechercher par nom, matricule ou UFR/École…" />
+        <select class="search" id="filter-accord" style="max-width:150px;flex:none;">
+          <option value="">Tous les accords</option>
+          <option value="Oui">Oui uniquement</option>
+          <option value="Non">Non uniquement</option>
+        </select>
+        <select class="search" id="filter-section" style="max-width:190px;flex:none;">
+          <option value="">Toutes les UFR/Écoles</option>
+        </select>
+        <button class="btn-export" id="print-all-btn" title="Génère une fiche imprimable pour chaque ligne affichée">Fiches à imprimer</button>
         <button class="btn-export" id="export-btn">Exporter CSV</button>
         <button class="btn-export" id="refresh-btn" style="background:var(--card);color:var(--ink-soft);border-color:var(--hairline);">Actualiser</button>
       </div>
-      <p class="refresh-note">Chaque versement est enregistré comme une ligne distincte (un ménage peut cotiser plusieurs fois).</p>
+      <p class="refresh-note">Les signatures ne sont pas incluses dans l'export CSV ; cliquez une vignette pour l'agrandir. « Fiches à imprimer » génère une fiche par membre (respecte les filtres en cours).</p>
+      <div class="card" id="section-stats-card" style="display:none;padding:16px 18px;margin-bottom:16px;">
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);margin:0 0 10px;">Répartition par UFR/École</p>
+        <div id="section-stats-body"></div>
+      </div>
       <div class="card" style="padding:0;overflow-x:auto;">
         <table>
           <thead>
             <tr>
-              <th>Reçu</th><th>Chef de ménage</th><th>Quartier</th><th>Téléphone</th><th>Montant</th><th>Date</th>
+              <th class="sortable" data-sort="nom">Nom</th>
+              <th class="sortable" data-sort="matricule">Matricule</th>
+              <th class="sortable" data-sort="section">UFR/École</th>
+              <th>Téléphone</th>
+              <th class="sortable" data-sort="accord">Accord</th>
+              <th>Signature</th>
+              <th class="sortable" data-sort="date">Date</th>
+              <th>Fiche</th>
             </tr>
           </thead>
           <tbody id="table-body"></tbody>
         </table>
-        <div class="empty" id="empty-state" style="display:none;">Aucun versement enregistré pour le moment.</div>
+        <div class="empty" id="empty-state" style="display:none;">Aucune confirmation enregistrée pour le moment.</div>
+      </div>
+      <div class="toolbar" id="pagination-bar" style="margin-top:14px;justify-content:center;align-items:center;gap:14px;">
+        <button class="btn-export" id="page-prev" style="background:var(--card);color:var(--ink-soft);border-color:var(--hairline);">← Précédent</button>
+        <span class="mono" id="page-indicator" style="font-size:12.5px;color:var(--ink-soft);"></span>
+        <button class="btn-export" id="page-next" style="background:var(--card);color:var(--ink-soft);border-color:var(--hairline);">Suivant →</button>
       </div>
     </div>
   </div>
 
 </div>
 
+<div class="lightbox" id="lightbox"><img id="lightbox-img" /></div>
+<div id="print-area"></div>
+
 <script>
 // ---------- CONFIG ----------
-// 1) Collez ici l'URL de votre déploiement Google Apps Script (voir DEPLOIEMENT.md).
+// 1) Collez ici l'URL de votre déploiement Google Apps Script (voir instructions).
 // 2) Changez ce code avant de partager le lien avec les responsables (doit être identique à SECRET dans Code.gs).
-const API_URL = "https://script.google.com/macros/s/AKfycbxb_urWuNctewN6YF2bDDcHY4aObazJZe9eLzs6JH7GD9uS1RzIGs4NJ7hjFq9COkpI/exec";
-const ADMIN_CODE = "MOSQUEE2026";
+const API_URL = "https://script.google.com/macros/s/AKfycby2C8D8j1Dl8KpM4aRkKPYb7n1dY57zLVQ5kG1P_vT3TxW4esyjxTIaveGpy4_t7DAzYg/exec";
+// Le code d'accès n'est plus stocké ici : il est saisi à l'écran et vérifié par le serveur
+// (voir la variable sessionCode plus bas). Le code de référence reste défini côté
+// Apps Script (SECRET dans Code.gs).
 
 // ---------- TABS ----------
 document.querySelectorAll('.tab').forEach(t=>{
@@ -302,18 +453,92 @@ document.querySelectorAll('.tab').forEach(t=>{
   });
 });
 
-// ---------- MONTANT RAPIDE ----------
-document.querySelectorAll('.qbtn').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    document.querySelectorAll('.qbtn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('montant').value = btn.dataset.amt;
+// ---------- ACCORD RADIO ----------
+document.querySelectorAll('.accord-opt').forEach(opt=>{
+  opt.addEventListener('click', ()=>{
+    document.querySelectorAll('.accord-opt').forEach(o=>o.classList.remove('checked'));
+    opt.classList.add('checked');
+    opt.querySelector('input').checked = true;
   });
 });
-document.getElementById('montant').addEventListener('input', ()=>{
-  const v = document.getElementById('montant').value;
-  document.querySelectorAll('.qbtn').forEach(b=> b.classList.toggle('active', b.dataset.amt === v));
+
+// ---------- SIGNATURE PAD ----------
+const canvas = document.getElementById('sigpad');
+const ctx = canvas.getContext('2d');
+let drawing = false, hasSignature = false;
+
+function resizeCanvas(){
+  const rect = canvas.getBoundingClientRect();
+  const ratio = window.devicePixelRatio || 1;
+  const prevData = hasSignature ? canvas.toDataURL() : null;
+  canvas.width = rect.width * ratio;
+  canvas.height = 160 * ratio;
+  ctx.scale(ratio, ratio);
+  ctx.lineWidth = 2;
+  ctx.lineCap = 'round';
+  ctx.strokeStyle = '#16233F';
+  if(prevData){
+    const img = new Image();
+    img.onload = ()=> ctx.drawImage(img,0,0,rect.width,160);
+    img.src = prevData;
+  }
+}
+window.addEventListener('resize', resizeCanvas);
+setTimeout(resizeCanvas, 50);
+
+function pos(e){
+  const rect = canvas.getBoundingClientRect();
+  const p = e.touches ? e.touches[0] : e;
+  return { x: p.clientX - rect.left, y: p.clientY - rect.top };
+}
+function start(e){ drawing=true; hasSignature=true; const p=pos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); e.preventDefault(); }
+function move(e){ if(!drawing) return; const p=pos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); e.preventDefault(); }
+function end(){ drawing=false; }
+canvas.addEventListener('mousedown', start);
+canvas.addEventListener('mousemove', move);
+window.addEventListener('mouseup', end);
+canvas.addEventListener('touchstart', start, {passive:false});
+canvas.addEventListener('touchmove', move, {passive:false});
+canvas.addEventListener('touchend', end);
+
+document.getElementById('clear-sig').addEventListener('click', ()=>{
+  const rect = canvas.getBoundingClientRect();
+  ctx.clearRect(0,0,rect.width,160);
+  hasSignature = false;
 });
+
+// ---------- MATRICULE : VÉRIFICATION DE DOUBLON (best effort) ----------
+document.getElementById('matricule').addEventListener('blur', async ()=>{
+  const m = document.getElementById('matricule').value.trim();
+  const warn = document.getElementById('dup-warning');
+  warn.style.display = 'none';
+  if(!m || API_URL === "COLLEZ_ICI_VOTRE_URL_WEBAPP") return;
+  try{
+    const resp = await fetch(API_URL + '?action=check&matricule=' + encodeURIComponent(m));
+    const data = await resp.json();
+    if(data && data.exists){
+      warn.textContent = 'Une confirmation existe déjà pour ce matricule' + (data.nom ? ' (' + data.nom + ')' : '') + '. Envoyer un nouveau formulaire la remplacera.';
+      warn.style.display = 'block';
+    }
+  }catch(err){
+    // Le serveur ne prend peut-être pas encore en charge cette vérification : on ignore silencieusement.
+  }
+});
+
+// ---------- GÉOLOCALISATION OPTIONNELLE ----------
+function getPositionIfConsented(){
+  return new Promise(resolve=>{
+    if(!document.getElementById('geo-consent').checked || !navigator.geolocation){
+      resolve(null);
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      pos => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      () => resolve(null),
+      { timeout: 4000 }
+    );
+  });
+}
 
 // ---------- SUBMIT ----------
 function showError(msg){
@@ -327,27 +552,36 @@ function clearError(){
 
 document.getElementById('submit-btn').addEventListener('click', async ()=>{
   clearError();
-  const chef = document.getElementById('chef').value.trim();
-  const quartier = document.getElementById('quartier').value.trim();
+  const nom = document.getElementById('nom').value.trim();
+  const matricule = document.getElementById('matricule').value.trim();
+  const section = document.getElementById('section').value.trim();
   const tel = document.getElementById('tel').value.trim();
-  const montant = parseInt(document.getElementById('montant').value, 10);
-  const note = document.getElementById('note').value.trim();
+  const accordEl = document.querySelector('input[name="accord"]:checked');
 
-  if(!chef || !quartier || !tel){
-    showError('Merci de renseigner tous les champs obligatoires.');
+  if(!nom || !matricule || !section || !tel){
+    showError('Merci de renseigner tous les champs.');
     return;
   }
-  if(!montant || montant <= 0){
-    showError('Merci de renseigner un montant valide.');
+  if(!accordEl){
+    showError('Merci de sélectionner votre choix d\'accord check-off.');
+    return;
+  }
+  if(!hasSignature){
+    showError('Merci de signer dans la zone prévue à cet effet.');
     return;
   }
 
   const btn = document.getElementById('submit-btn');
   btn.disabled = true; btn.textContent = 'Envoi en cours…';
 
+  const position = await getPositionIfConsented();
+
   const record = {
-    chef, quartier, telephone: tel, montant, note,
-    date: new Date().toISOString()
+    nom, matricule, section, telephone: tel,
+    accord: accordEl.value,
+    signature: canvas.toDataURL('image/png'),
+    date: new Date().toISOString(),
+    position: position
   };
 
   try{
@@ -372,24 +606,31 @@ function showConfirmation(record){
   card.style.display = 'block';
   const d = new Date(record.date);
   document.getElementById('receipt').innerHTML = `
-    <div><span class="k">Chef de ménage</span><span class="v">${escapeHtml(record.chef)}</span></div>
-    <div><span class="k">Quartier</span><span class="v">${escapeHtml(record.quartier)}</span></div>
-    <div><span class="k">Montant</span><span class="v">${record.montant.toLocaleString('fr-FR')} F CFA</span></div>
+    <div><span class="k">Nom</span><span class="v">${escapeHtml(record.nom)}</span></div>
+    <div><span class="k">Matricule</span><span class="v">${escapeHtml(record.matricule)}</span></div>
+    <div><span class="k">UFR/École</span><span class="v">${escapeHtml(record.section)}</span></div>
+    <div><span class="k">Accord</span><span class="v">${record.accord}</span></div>
     <div><span class="k">Date</span><span class="v">${d.toLocaleDateString('fr-FR')} ${d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</span></div>
   `;
 }
 document.getElementById('new-entry-btn').addEventListener('click', ()=>{
   document.getElementById('confirm-card').style.display='none';
   document.getElementById('form-card').style.display='block';
-  document.getElementById('chef').value='';
-  document.getElementById('quartier').value='';
+  document.getElementById('nom').value='';
+  document.getElementById('matricule').value='';
+  document.getElementById('section').value='';
   document.getElementById('tel').value='';
-  document.getElementById('montant').value='5000';
-  document.getElementById('note').value='';
-  document.querySelectorAll('.qbtn').forEach(b=> b.classList.toggle('active', b.dataset.amt === '5000'));
+  document.getElementById('geo-consent').checked = false;
+  document.getElementById('dup-warning').style.display = 'none';
+  document.querySelectorAll('.accord-opt').forEach(o=>o.classList.remove('checked'));
+  document.querySelectorAll('input[name="accord"]').forEach(r=>r.checked=false);
+  const rect = canvas.getBoundingClientRect();
+  ctx.clearRect(0,0,rect.width,160);
+  hasSignature = false;
   const btn = document.getElementById('submit-btn');
   btn.disabled = false; btn.textContent = 'Confirmer et envoyer';
   clearError();
+  document.getElementById('nom').focus();
 });
 
 function escapeHtml(s){
@@ -397,51 +638,206 @@ function escapeHtml(s){
 }
 
 // ---------- DASHBOARD GATE ----------
+// Le code d'accès n'est plus stocké en clair dans le code source : il est saisi par
+// l'utilisateur puis vérifié par le serveur (Apps Script) à chaque appel. Il n'est
+// gardé qu'en mémoire, pour la durée de la session, jamais écrit dans le code.
+let sessionCode = null;
+const SESSION_TIMEOUT_MS = 20 * 60 * 1000; // 20 minutes d'inactivité
+let sessionTimer = null;
+
 document.getElementById('pin-submit').addEventListener('click', checkPin);
 document.getElementById('pin-input').addEventListener('keydown', e=>{ if(e.key==='Enter') checkPin(); });
-function checkPin(){
+
+async function checkPin(){
   const val = document.getElementById('pin-input').value.trim();
-  if(val === ADMIN_CODE){
+  const errEl = document.getElementById('pin-error');
+  errEl.style.display = 'none';
+  if(!val) return;
+  const btn = document.getElementById('pin-submit');
+  btn.disabled = true; btn.textContent = 'Vérification…';
+  try{
+    const resp = await fetch(API_URL + '?code=' + encodeURIComponent(val));
+    const records = await resp.json();
+    if(records && records.error){
+      errEl.textContent = 'Code incorrect.';
+      errEl.style.display = 'block';
+      btn.disabled = false; btn.textContent = 'Accéder';
+      return;
+    }
+    sessionCode = val;
+    document.getElementById('pin-input').value = '';
     document.getElementById('dash-gate').style.display='none';
     document.getElementById('dash-content').style.display='block';
-    loadSubmissions();
-  }else{
-    document.getElementById('pin-error').textContent = 'Code incorrect.';
-    document.getElementById('pin-error').style.display='block';
+    records.sort((a,b)=> new Date(b.date) - new Date(a.date));
+    allRecords = records;
+    populateSectionFilter(allRecords);
+    applyFiltersAndRender();
+    resetSessionTimer();
+  }catch(err){
+    errEl.textContent = 'Erreur de connexion. Réessayez.';
+    errEl.style.display = 'block';
   }
+  btn.disabled = false; btn.textContent = 'Accéder';
 }
+
+function lockDashboard(){
+  clearTimeout(sessionTimer);
+  sessionCode = null;
+  allRecords = [];
+  currentRecords = [];
+  document.getElementById('dash-content').style.display = 'none';
+  document.getElementById('dash-gate').style.display = 'block';
+  document.getElementById('pin-input').value = '';
+}
+
+function resetSessionTimer(){
+  if(!sessionCode) return;
+  clearTimeout(sessionTimer);
+  sessionTimer = setTimeout(()=>{
+    lockDashboard();
+    const errEl = document.getElementById('pin-error');
+    errEl.textContent = 'Session expirée par inactivité. Merci de vous reconnecter.';
+    errEl.style.display = 'block';
+  }, SESSION_TIMEOUT_MS);
+}
+['click','keydown','mousemove'].forEach(evt=>{
+  document.addEventListener(evt, ()=>{ if(sessionCode) resetSessionTimer(); });
+});
 
 // ---------- DASHBOARD DATA ----------
 let allRecords = [];
+let currentRecords = [];   // ensemble filtré + trié (avant pagination)
+let sortField = 'date';
+let sortDir = 'desc';
+let currentPage = 1;
+const PAGE_SIZE = 25;
 
 async function loadSubmissions(){
+  if(!sessionCode) return;
   const tbody = document.getElementById('table-body');
-  tbody.innerHTML = '<tr><td colspan="6" class="empty">Chargement…</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="8" class="empty">Chargement…</td></tr>';
   try{
-    const resp = await fetch(API_URL + '?code=' + encodeURIComponent(ADMIN_CODE));
+    const resp = await fetch(API_URL + '?code=' + encodeURIComponent(sessionCode));
     const records = await resp.json();
     if(records && records.error){
-      tbody.innerHTML = '<tr><td colspan="6" class="empty">Accès refusé par le serveur.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="8" class="empty">Accès refusé par le serveur.</td></tr>';
       return;
     }
     records.sort((a,b)=> new Date(b.date) - new Date(a.date));
     allRecords = records;
-    renderTable(records);
-    renderStats(records);
+    populateSectionFilter(allRecords);
+    applyFiltersAndRender();
   }catch(err){
-    tbody.innerHTML = '<tr><td colspan="6" class="empty">Erreur de chargement des données.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" class="empty">Erreur de chargement des données.</td></tr>';
   }
+}
+
+function populateSectionFilter(records){
+  const sel = document.getElementById('filter-section');
+  const current = sel.value;
+  const sections = [...new Set(records.map(r=>r.section).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+  sel.innerHTML = '<option value="">Toutes les UFR/Écoles</option>' +
+    sections.map(s=>`<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
+  if(sections.includes(current)) sel.value = current;
 }
 
 function renderStats(records){
   document.getElementById('stat-total').textContent = records.length;
-  const menages = new Set(records.map(r=> (r.telephone||'').trim()));
-  document.getElementById('stat-menages').textContent = menages.size;
-  const total = records.reduce((s,r)=> s + (parseInt(r.montant,10)||0), 0);
-  document.getElementById('stat-montant').textContent = total.toLocaleString('fr-FR');
+  document.getElementById('stat-oui').textContent = records.filter(r=>r.accord==='Oui').length;
+  document.getElementById('stat-non').textContent = records.filter(r=>r.accord==='Non').length;
 }
 
-function renderTable(records){
+function renderSectionStats(records){
+  const card = document.getElementById('section-stats-card');
+  const body = document.getElementById('section-stats-body');
+  if(records.length===0){ card.style.display='none'; return; }
+  const bySection = {};
+  records.forEach(r=>{
+    const s = r.section || '—';
+    if(!bySection[s]) bySection[s] = { total:0, oui:0, non:0 };
+    bySection[s].total++;
+    if(r.accord==='Oui') bySection[s].oui++; else bySection[s].non++;
+  });
+  const rows = Object.keys(bySection).sort((a,b)=>a.localeCompare(b)).map(s=>{
+    const v = bySection[s];
+    return `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #EFEBE1;font-size:13px;">
+      <span>${escapeHtml(s)}</span>
+      <span><strong>${v.total}</strong> · <span style="color:var(--green);">${v.oui} oui</span> · <span style="color:var(--red);">${v.non} non</span></span>
+    </div>`;
+  }).join('');
+  body.innerHTML = rows;
+  card.style.display = 'block';
+}
+
+// ---------- FILTRES + TRI + PAGINATION ----------
+function applyFiltersAndRender(){
+  const q = document.getElementById('search-input').value.toLowerCase().trim();
+  const accordFilter = document.getElementById('filter-accord').value;
+  const sectionFilter = document.getElementById('filter-section').value;
+
+  let filtered = allRecords.filter(r=>{
+    if(accordFilter && r.accord !== accordFilter) return false;
+    if(sectionFilter && r.section !== sectionFilter) return false;
+    if(q && !(r.nom.toLowerCase().includes(q) || r.matricule.toLowerCase().includes(q) || r.section.toLowerCase().includes(q))) return false;
+    return true;
+  });
+
+  filtered.sort((a,b)=>{
+    let va, vb;
+    if(sortField==='date'){ va = new Date(a.date); vb = new Date(b.date); }
+    else { va = (a[sortField]||'').toString().toLowerCase(); vb = (b[sortField]||'').toString().toLowerCase(); }
+    if(va < vb) return sortDir==='asc' ? -1 : 1;
+    if(va > vb) return sortDir==='asc' ? 1 : -1;
+    return 0;
+  });
+
+  currentRecords = filtered;
+  renderStats(allRecords);
+  renderSectionStats(filtered);
+  updateSortIndicators();
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  if(currentPage > totalPages) currentPage = totalPages;
+  const start = (currentPage-1) * PAGE_SIZE;
+  const pageRecords = filtered.slice(start, start + PAGE_SIZE);
+
+  renderTable(pageRecords, start);
+
+  document.getElementById('page-indicator').textContent =
+    filtered.length === 0 ? 'Aucun résultat' : `Page ${currentPage} / ${totalPages} — ${filtered.length} confirmation(s)`;
+  document.getElementById('page-prev').disabled = currentPage <= 1;
+  document.getElementById('page-next').disabled = currentPage >= totalPages;
+}
+
+function updateSortIndicators(){
+  document.querySelectorAll('th.sortable').forEach(th=>{
+    th.querySelectorAll('.arrow').forEach(a=>a.remove());
+    if(th.dataset.sort === sortField){
+      const arrow = document.createElement('span');
+      arrow.className = 'arrow';
+      arrow.textContent = sortDir==='asc' ? '▲' : '▼';
+      th.appendChild(arrow);
+    }
+  });
+}
+
+document.querySelectorAll('th.sortable').forEach(th=>{
+  th.addEventListener('click', ()=>{
+    const field = th.dataset.sort;
+    if(sortField === field){ sortDir = sortDir==='asc' ? 'desc' : 'asc'; }
+    else { sortField = field; sortDir = 'asc'; }
+    currentPage = 1;
+    applyFiltersAndRender();
+  });
+});
+
+document.getElementById('page-prev').addEventListener('click', ()=>{ currentPage--; applyFiltersAndRender(); });
+document.getElementById('page-next').addEventListener('click', ()=>{ currentPage++; applyFiltersAndRender(); });
+document.getElementById('filter-accord').addEventListener('change', ()=>{ currentPage=1; applyFiltersAndRender(); });
+document.getElementById('filter-section').addEventListener('change', ()=>{ currentPage=1; applyFiltersAndRender(); });
+document.getElementById('search-input').addEventListener('input', ()=>{ currentPage=1; applyFiltersAndRender(); });
+
+function renderTable(records, offset){
   const tbody = document.getElementById('table-body');
   const empty = document.getElementById('empty-state');
   if(records.length===0){
@@ -450,39 +846,76 @@ function renderTable(records){
     return;
   }
   empty.style.display='none';
-  tbody.innerHTML = records.map((r, i)=>{
+  tbody.innerHTML = records.map((r,i)=>{
+    const idx = offset + i; // index dans currentRecords (ensemble filtré complet)
     const d = new Date(r.date);
     return `<tr>
-      <td class="mono">R-${String(records.length - i).padStart(4,'0')}</td>
-      <td>${escapeHtml(r.chef)}</td>
-      <td>${escapeHtml(r.quartier)}</td>
+      <td>${escapeHtml(r.nom)}</td>
+      <td class="mono">${escapeHtml(r.matricule)}</td>
+      <td>${escapeHtml(r.section)}</td>
       <td class="mono">${escapeHtml(r.telephone)}</td>
-      <td class="mono">${(parseInt(r.montant,10)||0).toLocaleString('fr-FR')}</td>
+      <td><span class="pill ${r.accord==='Oui'?'oui':'non'}">${r.accord}</span></td>
+      <td><img class="sig-thumb" src="${r.signature}" onclick="openLightbox('${r.signature.replace(/'/g,"")}')" /></td>
       <td class="mono">${d.toLocaleDateString('fr-FR')}</td>
+      <td><button class="btn-row-print" onclick="printFiches([currentRecords[${idx}]])">Imprimer</button></td>
     </tr>`;
   }).join('');
 }
 
-document.getElementById('search-input').addEventListener('input', e=>{
-  const q = e.target.value.toLowerCase().trim();
-  if(!q){ renderTable(allRecords); return; }
-  const filtered = allRecords.filter(r =>
-    r.chef.toLowerCase().includes(q) ||
-    r.quartier.toLowerCase().includes(q) ||
-    r.telephone.toLowerCase().includes(q)
-  );
-  renderTable(filtered);
+// ---------- FICHES INDIVIDUELLES À IMPRIMER ----------
+function ficheHTML(r){
+  const d = new Date(r.date);
+  return `
+    <div class="fiche">
+      <div class="fiche-head">
+        <div>
+          <div class="fiche-eyebrow">Syndicat Autonome de l'Enseignement Supérieur — Section UAM Diamniadio</div>
+          <div class="fiche-title">Fiche individuelle — Confirmation check-off</div>
+        </div>
+      </div>
+      <table>
+        <tr><td class="k">Nom complet</td><td class="v">${escapeHtml(r.nom)}</td></tr>
+        <tr><td class="k">Matricule</td><td class="v mono">${escapeHtml(r.matricule)}</td></tr>
+        <tr><td class="k">UFR / École</td><td class="v">${escapeHtml(r.section)}</td></tr>
+        <tr><td class="k">Téléphone</td><td class="v mono">${escapeHtml(r.telephone)}</td></tr>
+        <tr><td class="k">Accord check-off</td><td class="v" style="color:${r.accord==='Oui'?'#3F6C51':'#A23E34'};">${r.accord}${r.accord==='Oui' ? ' — Prélèvement autorisé' : ' — Prélèvement refusé'}</td></tr>
+        <tr><td class="k">Date de confirmation</td><td class="v">${d.toLocaleDateString('fr-FR')} à ${d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</td></tr>
+        ${r.position ? `<tr><td class="k">Position (déclarative)</td><td class="v mono">${r.position.lat.toFixed(5)}, ${r.position.lng.toFixed(5)}</td></tr>` : ''}
+      </table>
+      <div class="fiche-sig-label">Signature électronique</div>
+      <img class="fiche-sig-img" src="${r.signature}" />
+      <div class="fiche-foot">Document généré depuis la plateforme numérique check-off syndical — à conserver pour archivage.</div>
+    </div>
+  `;
+}
+
+function printFiches(records){
+  if(!records || !records.length) return;
+  document.getElementById('print-area').innerHTML = records.map(ficheHTML).join('');
+  window.print();
+}
+
+document.getElementById('print-all-btn').addEventListener('click', ()=>{
+  printFiches(currentRecords);
+});
+
+function openLightbox(src){
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').classList.add('show');
+}
+document.getElementById('lightbox').addEventListener('click', ()=>{
+  document.getElementById('lightbox').classList.remove('show');
 });
 
 document.getElementById('refresh-btn').addEventListener('click', loadSubmissions);
 
 document.getElementById('export-btn').addEventListener('click', ()=>{
-  if(allRecords.length===0) return;
-  const headers = ['Chef de menage','Quartier','Telephone','Montant','Note','Date'];
-  const rows = allRecords.map(r=>{
+  if(currentRecords.length===0) return;
+  const headers = ['Nom','Matricule','UFR/Ecole','Telephone','Accord','Date'];
+  const rows = currentRecords.map(r=>{
     const d = new Date(r.date);
     const dateStr = d.toLocaleDateString('fr-FR') + ' ' + d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
-    return [r.chef, r.quartier, r.telephone, r.montant, r.note||'', dateStr]
+    return [r.nom, r.matricule, r.section, r.telephone, r.accord, dateStr]
       .map(v => `"${String(v).replace(/"/g,'""')}"`).join(',');
   });
   const csv = headers.join(',') + '\n' + rows.join('\n');
@@ -490,7 +923,7 @@ document.getElementById('export-btn').addEventListener('click', ()=>{
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'cotisations_mosquee_' + new Date().toISOString().slice(0,10) + '.csv';
+  a.download = 'checkoff_confirmations_' + new Date().toISOString().slice(0,10) + '.csv';
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   URL.revokeObjectURL(url);
 });
