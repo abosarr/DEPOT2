@@ -10,7 +10,7 @@
 <style>
   :root{
     --sn-green:#00853F; --sn-yellow:#FDEF42; --sn-red:#E31B23;
-    --paper:#FBFAF5; --card:#FFFFFF; --ink:#1B2A20; --ink-soft:#54614F;
+    --paper:#EAF2FB; --card:#FFFFFF; --ink:#1B2A20; --ink-soft:#54614F;
     --hairline:#DCE3D3; --green-soft:#E7F4EC; --red-soft:#FBE9E7; --yellow-soft:#FFF6D6;
     --radius:14px;
   }
@@ -74,6 +74,7 @@
   .badge.actif,.badge.remb{background:var(--green-soft);color:var(--sn-green);}
   .badge.inactif,.badge.cours{background:var(--yellow-soft);color:#7A6412;}
   .empty{text-align:center;padding:34px 10px;color:var(--ink-soft);font-size:13px;}
+  .print-link{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--sn-green);cursor:pointer;text-decoration:underline;background:none;border:none;padding:0;}
   .toolbar{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;}
   .search{flex:1;min-width:160px;padding:9px 12px;border:1px solid var(--hairline);border-radius:8px;font-size:13px;background:var(--card);}
   .refresh-note{font-size:11px;color:#8B9285;margin-bottom:10px;}
@@ -85,6 +86,39 @@
   .bar-label{font-size:10.5px;color:var(--ink-soft);margin-top:6px;text-align:center;}
 
   .demo-banner{background:var(--yellow-soft);border:1px solid var(--sn-yellow);color:#7A6412;font-size:12px;padding:9px 14px;border-radius:8px;margin-bottom:18px;}
+
+  /* ===== Cartes de membres ===== */
+  #printable-cards{display:none;}
+  .id-card{
+    width:85.6mm;height:54mm;border-radius:3.5mm;
+    background:linear-gradient(135deg,#FFFFFF 0%,#F3F8F4 100%);
+    border:0.3mm solid var(--hairline);
+    padding:4mm 5mm;box-sizing:border-box;
+    display:flex;flex-direction:column;justify-content:space-between;
+    position:relative;overflow:hidden;
+    break-inside:avoid;page-break-inside:avoid;
+  }
+  .id-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2.2mm;
+    background:linear-gradient(90deg,var(--sn-green) 0 33.33%,var(--sn-yellow) 33.33% 66.66%,var(--sn-red) 66.66% 100%);}
+  .id-card .ic-head{display:flex;align-items:center;gap:2.5mm;margin-top:1.5mm;}
+  .id-card .ic-logo{width:9mm;height:9mm;border-radius:50%;object-fit:cover;box-shadow:0 0 0 0.4mm var(--sn-green);flex-shrink:0;}
+  .id-card .ic-org{font-family:'Fraunces',serif;font-weight:700;font-size:9.5px;color:var(--ink);line-height:1.15;}
+  .id-card .ic-org .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:6px;letter-spacing:.08em;text-transform:uppercase;color:var(--sn-green);font-weight:700;display:block;}
+  .id-card .ic-body{margin-top:1mm;}
+  .id-card .ic-name{font-family:'Fraunces',serif;font-weight:700;font-size:13px;color:var(--ink);line-height:1.2;}
+  .id-card .ic-id{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--sn-green);font-weight:700;margin-top:0.5mm;}
+  .id-card .ic-row{display:flex;justify-content:space-between;font-size:8px;color:var(--ink-soft);margin-top:2.5mm;}
+  .id-card .ic-row div b{color:var(--ink);font-weight:600;display:block;font-size:8.5px;}
+  .id-card .ic-foot{font-size:6.5px;color:#9AA398;text-align:center;margin-top:1.5mm;font-family:'IBM Plex Mono',monospace;letter-spacing:.03em;}
+
+  @media print{
+    body *{visibility:hidden;}
+    #printable-cards, #printable-cards *{visibility:visible;}
+    #printable-cards{
+      display:grid !important;grid-template-columns:1fr 1fr;gap:5mm;
+      position:absolute;top:0;left:0;width:100%;padding:8mm;
+    }
+  }
 
   @media (max-width:640px){
     .wrap{padding:18px 12px 60px;}
@@ -130,7 +164,7 @@
       <div class="tab" data-tab="remboursements">Remboursements</div>
       <div class="tab" data-tab="dashboard">Tableau de bord</div>
       <div class="tab" data-tab="groupes">Groupes</div>
-      <div class="tab" data-tab="mensuel">Suivi mensuel</div>
+      <div class="tab" data-tab="mensuel">Suivi hebdomadaire</div>
       <div class="tab" data-tab="fiche">Fiche membre</div>
     </div>
 
@@ -151,6 +185,17 @@
         </div>
         <label>Date d'adhésion</label>
         <input type="date" id="m-date" />
+
+        <div id="m-dup-warning" style="display:none;background:var(--yellow-soft);border:1px solid var(--sn-yellow);border-radius:10px;padding:14px 16px;margin-top:16px;">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#7A6412;font-weight:700;margin-bottom:6px;">⚠️ Membre(s) similaire(s) déjà enregistré(s)</div>
+          <div id="m-dup-list" style="font-size:13px;color:var(--ink);margin-bottom:12px;line-height:1.6;"></div>
+          <div style="font-size:12.5px;color:var(--ink-soft);margin-bottom:10px;">Confirmez-vous qu'il s'agit bien d'une personne différente ?</div>
+          <div style="display:flex;gap:10px;">
+            <button class="btn-secondary" id="m-dup-cancel" style="border-color:#D8C68A;">Annuler</button>
+            <button class="btn-primary" id="m-dup-confirm">Oui, créer quand même</button>
+          </div>
+        </div>
+
         <div class="submit-row">
           <button class="btn-primary" id="m-submit">Ajouter le membre</button>
           <span class="error-msg" id="m-error"></span>
@@ -158,14 +203,20 @@
         </div>
       </div>
       <div class="card">
-        <div class="toolbar"><input type="text" class="search" id="m-search" placeholder="Rechercher un membre…"></div>
+        <div class="toolbar">
+          <input type="text" class="search" id="m-search" placeholder="Rechercher un membre…">
+          <button class="btn-secondary" id="m-cards-btn">🪪 Générer les cartes de membres</button>
+        </div>
+        <p class="hint" id="m-cards-hint" style="margin-bottom:10px;">Génère une carte par membre affiché ci-dessous (filtrez par la recherche pour n'imprimer qu'un groupe ou une sélection).</p>
         <div class="table-wrap"><table>
-          <thead><tr><th>ID</th><th>Nom</th><th>Groupement</th><th>Statut</th><th>Téléphone</th><th>Adhésion</th></tr></thead>
+          <thead><tr><th>ID</th><th>Nom</th><th>Groupement</th><th>Statut</th><th>Téléphone</th><th>Adhésion</th><th></th></tr></thead>
           <tbody id="m-table"></tbody>
         </table></div>
         <div class="empty" id="m-empty" style="display:none;">Aucun membre enregistré.</div>
       </div>
     </div>
+
+    <div id="printable-cards"></div>
 
     <!-- ===================== EPARGNE ===================== -->
     <div class="panel" id="panel-epargne">
@@ -178,8 +229,17 @@
         </div>
         <div class="two-col">
           <div><label>Date</label><input type="date" id="e-date" /></div>
-          <div><label>Montant (F CFA)</label><input type="text" inputmode="numeric" id="e-montant" placeholder="Ex : 1000" /></div>
+          <div><label>Semaine</label>
+            <select id="e-semaine">
+              <option value="1">Semaine 1</option>
+              <option value="2">Semaine 2</option>
+              <option value="3">Semaine 3</option>
+              <option value="4">Semaine 4</option>
+            </select>
+          </div>
         </div>
+        <label>Montant (F CFA)</label>
+        <input type="text" inputmode="numeric" id="e-montant" placeholder="Ex : 1000" />
         <div class="submit-row">
           <button class="btn-primary" id="e-submit">Enregistrer</button>
           <span class="error-msg" id="e-error"></span>
@@ -189,7 +249,7 @@
       <div class="card">
         <div class="toolbar"><input type="text" class="search" id="e-search" placeholder="Rechercher par membre…"></div>
         <div class="table-wrap"><table>
-          <thead><tr><th>Date</th><th>Membre</th><th>Montant</th><th>Solde du membre</th></tr></thead>
+          <thead><tr><th>Date</th><th>Semaine</th><th>Membre</th><th>Montant</th><th>Solde du membre</th></tr></thead>
           <tbody id="e-table"></tbody>
         </table></div>
         <div class="empty" id="e-empty" style="display:none;">Aucune opération enregistrée.</div>
@@ -286,9 +346,11 @@
     <div class="panel" id="panel-mensuel">
       <div class="card">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
-          <p class="doc-title" style="margin:0;">Cotisations mensuelles</p>
+          <p class="doc-title" style="margin:0;">Cotisations hebdomadaires</p>
+          <select id="s-mois" style="width:auto;"></select>
           <select id="s-annee" style="width:auto;"></select>
         </div>
+        <p class="hint" style="margin-top:-10px;margin-bottom:14px;">Semaine 1 : jours 1-7 · Semaine 2 : jours 8-14 · Semaine 3 : jours 15-21 · Semaine 4 : jours 22 à fin de mois.</p>
         <div class="table-wrap"><table id="s-table-el">
           <thead><tr id="s-head"></tr></thead>
           <tbody id="s-table"></tbody>
@@ -315,8 +377,8 @@
 
 <script>
 // ================= CONFIG =================
-const API_URL = "https://script.google.com/macros/s/AKfycbyCksGY069Nw_X9HoQ5TPdUxC1_5sJnrNgtHeruNJxG1Ws5jSWlE1jlx7mPv7_tXTc/exec";
-const ADMIN_CODE = "3CLES2026";
+const API_URL = "https://script.google.com/macros/s/AKfycbyJMCjfaEwt70M5vDLzU8ynOxq2jHQjevJgYZy4Sjy9uNUQmPsOIissZvjmiibSbw0F/exec";
+const ADMIN_CODE = "MLG2026";
 
 let DATA = { membres: [], epargnes: [], credits: [], remboursements: [] };
 let demoMode = false;
@@ -331,9 +393,9 @@ function loadDemoData(){
       { id:"M002", nom:"Fatou Diop", groupement:"Groupement Jappoo", statut:"Actif", telephone:"77 111 11 11", date:"2025-01-20" },
     ],
     epargnes: [
-      { date:"2025-02-01", membre:"Aïssatou Ndiaye", type:"Dépôt", montant:5000 },
-      { date:"2025-03-01", membre:"Aïssatou Ndiaye", type:"Dépôt", montant:5000 },
-      { date:"2025-02-05", membre:"Fatou Diop", type:"Dépôt", montant:3000 },
+      { date:"2025-02-01", semaine:1, membre:"Aïssatou Ndiaye", type:"Dépôt", montant:5000 },
+      { date:"2025-03-01", semaine:1, membre:"Aïssatou Ndiaye", type:"Dépôt", montant:5000 },
+      { date:"2025-02-05", semaine:1, membre:"Fatou Diop", type:"Dépôt", montant:3000 },
     ],
     credits: [
       { id:"C001", membre:"Aïssatou Ndiaye", montant:50000, taux:0.05, duree:6, date:"2025-02-10" },
@@ -407,11 +469,13 @@ async function loadAll(){
 async function sendRecord(record){
   if(demoMode){ return { ok:true, demo:true }; }
   try{
-    await fetch(API_URL, {
+    const resp = await fetch(API_URL, {
       method:'POST',
       headers:{'Content-Type':'text/plain;charset=utf-8'},
       body: JSON.stringify({ ...record, code: ADMIN_CODE })
     });
+    const json = await resp.json().catch(()=>({}));
+    if(json.error){ return { ok:false, error: json.error }; }
     return { ok:true };
   }catch(err){
     return { ok:false };
@@ -484,27 +548,104 @@ function fillCreditSelect(){
 }
 
 // ================= MEMBRES =================
+function normalizeNom(s){ return s.toLowerCase().trim().replace(/\s+/g,' '); }
+function normalizeTel(s){ return s.replace(/[\s.\-]/g,''); }
+
+function findDuplicateMembres(nom, telephone){
+  const n = normalizeNom(nom), t = normalizeTel(telephone);
+  return DATA.membres.filter(m => normalizeNom(m.nom) === n || (t && normalizeTel(m.telephone) === t));
+}
+
+let membreDupOverride = false;
+
 document.getElementById('m-submit').addEventListener('click', async ()=>{
+  const nom = document.getElementById('m-nom').value.trim();
+  const telephone = document.getElementById('m-tel').value.trim();
+  const errEl = document.getElementById('m-error'), okEl = document.getElementById('m-ok');
+  errEl.textContent=''; okEl.textContent='';
+  if(!nom || !telephone){ errEl.textContent = 'Nom et téléphone obligatoires.'; return; }
+
+  if(!membreDupOverride){
+    const doublons = findDuplicateMembres(nom, telephone);
+    if(doublons.length){
+      document.getElementById('m-dup-list').innerHTML = doublons.map(m => `
+        <div>• <b>${escapeHtml(m.nom)}</b> (code ${escapeHtml(m.id)}) — ${escapeHtml(m.telephone)}${m.groupement ? ' · '+escapeHtml(m.groupement) : ''}</div>
+      `).join('');
+      document.getElementById('m-dup-warning').style.display = 'block';
+      return;
+    }
+  }
+  membreDupOverride = false;
+  await creerMembre();
+});
+
+document.getElementById('m-dup-cancel').addEventListener('click', ()=>{
+  membreDupOverride = false;
+  document.getElementById('m-dup-warning').style.display = 'none';
+});
+document.getElementById('m-dup-confirm').addEventListener('click', async ()=>{
+  membreDupOverride = true;
+  document.getElementById('m-dup-warning').style.display = 'none';
+  await creerMembre();
+});
+
+async function creerMembre(){
   const nom = document.getElementById('m-nom').value.trim();
   const groupement = document.getElementById('m-groupement').value.trim();
   const statut = document.getElementById('m-statut').value;
   const telephone = document.getElementById('m-tel').value.trim();
   const dateAdhesion = document.getElementById('m-date').value;
   const errEl = document.getElementById('m-error'), okEl = document.getElementById('m-ok');
-  errEl.textContent=''; okEl.textContent='';
-  if(!nom || !telephone){ errEl.textContent = 'Nom et téléphone obligatoires.'; return; }
 
-  const id = 'M' + String(DATA.membres.length + 1).padStart(3,'0');
-  const record = { type:'membre', id, nom, groupement, statut, telephone, date: dateAdhesion || new Date().toISOString().slice(0,10) };
-  const res = await sendRecord(record);
-  if(!res.ok){ errEl.textContent = "Échec de l'enregistrement."; return; }
-  DATA.membres.push(record);
-  okEl.textContent = 'Membre ajouté.';
-  ['m-nom','m-groupement','m-tel','m-date'].forEach(id=>document.getElementById(id).value='');
-  renderAll();
-  setTimeout(()=> okEl.textContent='', 2500);
-});
+  const btn = document.getElementById('m-submit');
+  btn.disabled = true; btn.textContent = 'Enregistrement…';
+
+  try{
+    // Recharge la liste la plus récente avant de calculer le code, pour limiter le risque
+    // de collision si un autre responsable vient d'ajouter un membre en parallèle.
+    if(!demoMode){
+      try{
+        const resp = await fetch(API_URL + '?code=' + encodeURIComponent(ADMIN_CODE));
+        const json = await resp.json();
+        if(!json.error) DATA = json;
+      }catch(e){ /* si le rechargement échoue, on continue avec les données en mémoire */ }
+    }
+
+    const id = nextMembreId();
+    const record = { type:'membre', id, nom, groupement, statut, telephone, date: dateAdhesion || new Date().toISOString().slice(0,10) };
+    const res = await sendRecord(record);
+    if(!res.ok){
+      errEl.textContent = res.error === 'duplicate' ? 'Ce code membre existe déjà — merci de réessayer.' : "Échec de l'enregistrement.";
+      return;
+    }
+    DATA.membres.push(record);
+    okEl.textContent = `Membre ajouté (code ${id}).`;
+    ['m-nom','m-groupement','m-tel','m-date'].forEach(id=>document.getElementById(id).value='');
+    renderAll();
+    setTimeout(()=> okEl.textContent='', 2500);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Ajouter le membre';
+  }
+}
 document.getElementById('m-search').addEventListener('input', renderMembres);
+
+// Code membre unique : basé sur le plus grand numéro existant (pas sur la longueur de la liste),
+// et vérifié pour ne jamais réutiliser un code déjà présent.
+function nextMembreId(){
+  const used = new Set(DATA.membres.map(m => m.id));
+  let maxNum = 0;
+  used.forEach(id => {
+    const n = parseInt(String(id).replace(/^M/, ''), 10);
+    if(!isNaN(n) && n > maxNum) maxNum = n;
+  });
+  let next = maxNum + 1;
+  let candidate = 'M' + String(next).padStart(3, '0');
+  while(used.has(candidate)){
+    next += 1;
+    candidate = 'M' + String(next).padStart(3, '0');
+  }
+  return candidate;
+}
 
 function renderMembres(){
   const q = document.getElementById('m-search').value.toLowerCase().trim();
@@ -519,12 +660,14 @@ function renderMembres(){
       <td><span class="badge ${m.statut==='Actif'?'actif':'inactif'}">${escapeHtml(m.statut)}</span></td>
       <td class="mono">${escapeHtml(m.telephone)}</td>
       <td class="mono">${fmtDate(m.date)}</td>
+      <td><button class="print-link" onclick="generateCards([${JSON.stringify(m.id)}])">Carte</button></td>
     </tr>`).join('');
 }
 
 // ================= EPARGNE =================
 document.getElementById('e-submit').addEventListener('click', async ()=>{
   const date = document.getElementById('e-date').value;
+  const semaine = document.getElementById('e-semaine').value;
   const membre = document.getElementById('e-membre').value;
   const type = 'Dépôt';
   const montant = document.getElementById('e-montant').value.trim();
@@ -533,10 +676,10 @@ document.getElementById('e-submit').addEventListener('click', async ()=>{
   if(!membre){ errEl.textContent = 'Ajoutez au moins un membre avant de saisir une opération.'; return; }
   if(!montant){ errEl.textContent = 'Montant obligatoire.'; return; }
 
-  const record = { type:'epargne', date: date || new Date().toISOString().slice(0,10), membre, montantType:type, montant };
+  const record = { type:'epargne', date: date || new Date().toISOString().slice(0,10), semaine, membre, montantType:type, montant };
   const res = await sendRecord(record);
   if(!res.ok){ errEl.textContent = "Échec de l'enregistrement."; return; }
-  DATA.epargnes.push({ date:record.date, membre, type, montant:+montant });
+  DATA.epargnes.push({ date:record.date, semaine:+semaine, membre, type, montant:+montant });
   okEl.textContent = 'Opération enregistrée.';
   document.getElementById('e-montant').value='';
   renderAll();
@@ -554,6 +697,7 @@ function renderEpargne(){
   tbody.innerHTML = rows.map(e=>`
     <tr>
       <td class="mono">${fmtDate(e.date)}</td>
+      <td class="mono">Semaine ${e.semaine || '—'}</td>
       <td>${escapeHtml(e.membre)}</td>
       <td class="mono">${fmt(e.montant)}</td>
       <td class="mono">${fmt(soldeMembre(e.membre))}</td>
@@ -702,41 +846,68 @@ function renderGroupes(){
   }).join('');
 }
 
-// ================= SUIVI MENSUEL =================
-const MOIS = ["Janv","Fév","Mars","Avr","Mai","Juin","Juil","Août","Sept","Oct","Nov","Déc"];
+// ================= SUIVI HEBDOMADAIRE =================
+const MOIS = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+const SEMAINES = ["Semaine 1","Semaine 2","Semaine 3","Semaine 4"];
+
+function joursDansSemaine(day, nbJoursMois){
+  if(day <= 7) return 0;
+  if(day <= 14) return 1;
+  if(day <= 21) return 2;
+  return 3; // jours 22 à fin de mois
+}
+
 function renderMensuel(){
   const yearsFromData = DATA.epargnes.map(e=> new Date(e.date).getFullYear()).filter(y=>!isNaN(y));
   const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth();
   const years = [...new Set([...yearsFromData, currentYear])].sort();
   const defaultYear = yearsFromData.length ? Math.max(...yearsFromData) : currentYear;
-  const sel = document.getElementById('s-annee');
-  const prevVal = sel.value;
-  sel.innerHTML = years.map(y=>`<option value="${y}">${y}</option>`).join('');
-  sel.value = years.includes(+prevVal) ? prevVal : String(defaultYear);
-  sel.onchange = renderMensuelTable;
+
+  const selAnnee = document.getElementById('s-annee');
+  const prevAnnee = selAnnee.value;
+  selAnnee.innerHTML = years.map(y=>`<option value="${y}">${y}</option>`).join('');
+  selAnnee.value = years.includes(+prevAnnee) ? prevAnnee : String(defaultYear);
+
+  const selMois = document.getElementById('s-mois');
+  if(!selMois.dataset.filled){
+    selMois.innerHTML = MOIS.map((m,i)=>`<option value="${i}">${m}</option>`).join('');
+    selMois.value = currentMonth;
+    selMois.dataset.filled = '1';
+  }
+
+  selAnnee.onchange = renderMensuelTable;
+  selMois.onchange = renderMensuelTable;
   renderMensuelTable();
 }
+
 function renderMensuelTable(){
   const year = +document.getElementById('s-annee').value;
-  document.getElementById('s-head').innerHTML = '<th>Membre</th><th>Groupement</th>' + MOIS.map(m=>`<th>${m}</th>`).join('') + '<th>Total</th>';
+  const month = +document.getElementById('s-mois').value;
+
+  document.getElementById('s-head').innerHTML = '<th>Membre</th><th>Groupement</th>' + SEMAINES.map(s=>`<th>${s}</th>`).join('') + '<th>Total</th>';
   document.getElementById('s-empty').style.display = DATA.membres.length? 'none':'block';
 
   const rows = DATA.membres.map(m=>{
-    const monthTotals = MOIS.map((_, mi)=>
-      DATA.epargnes.filter(e=> e.membre===m.nom && e.type==='Dépôt' && new Date(e.date).getFullYear()===year && new Date(e.date).getMonth()===mi)
-        .reduce((s,e)=> s + (+e.montant), 0)
-    );
-    const total = monthTotals.reduce((a,b)=>a+b,0);
-    return { nom:m.nom, groupement:m.groupement, monthTotals, total };
+    const semaineTotals = [0,0,0,0];
+    DATA.epargnes.forEach(e=>{
+      if(e.membre !== m.nom || e.type !== 'Dépôt') return;
+      const d = new Date(e.date);
+      if(d.getFullYear() !== year || d.getMonth() !== month) return;
+      const si = e.semaine ? (+e.semaine - 1) : joursDansSemaine(d.getDate());
+      if(si >= 0 && si <= 3) semaineTotals[si] += (+e.montant);
+    });
+    const total = semaineTotals.reduce((a,b)=>a+b,0);
+    return { nom:m.nom, groupement:m.groupement, semaineTotals, total };
   });
 
   document.getElementById('s-table').innerHTML = rows.map(r=>`
-    <tr><td>${escapeHtml(r.nom)}</td><td>${escapeHtml(r.groupement)}</td>${r.monthTotals.map(v=>`<td class="mono">${fmt(v)}</td>`).join('')}<td class="mono"><b>${fmt(r.total)}</b></td></tr>
+    <tr><td>${escapeHtml(r.nom)}</td><td>${escapeHtml(r.groupement)}</td>${r.semaineTotals.map(v=>`<td class="mono">${fmt(v)}</td>`).join('')}<td class="mono"><b>${fmt(r.total)}</b></td></tr>
   `).join('');
 
-  const monthGrandTotals = MOIS.map((_, mi)=> rows.reduce((s,r)=> s + r.monthTotals[mi], 0));
-  const grandTotal = monthGrandTotals.reduce((a,b)=>a+b,0);
-  document.getElementById('s-foot').innerHTML = `<td><b>Total du mois</b></td><td></td>${monthGrandTotals.map(v=>`<td class="mono"><b>${fmt(v)}</b></td>`).join('')}<td class="mono"><b>${fmt(grandTotal)}</b></td>`;
+  const semaineGrandTotals = [0,1,2,3].map(si => rows.reduce((s,r)=> s + r.semaineTotals[si], 0));
+  const grandTotal = semaineGrandTotals.reduce((a,b)=>a+b,0);
+  document.getElementById('s-foot').innerHTML = `<td><b>Total de la semaine</b></td><td></td>${semaineGrandTotals.map(v=>`<td class="mono"><b>${fmt(v)}</b></td>`).join('')}<td class="mono"><b>${fmt(grandTotal)}</b></td>`;
 }
 
 // ================= FICHE MEMBRE =================
